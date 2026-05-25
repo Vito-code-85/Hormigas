@@ -55,8 +55,8 @@ export function obtenerVelocidadHormiga(
   hormigasAMatar: number
 ): number {
   const progreso = hormigasAMatar > 0 ? Math.min(hormigasMatadas / hormigasAMatar, 1) : 0
-  const velMin = Math.min(1 + (nivel - 1) * 0.50, CONFIG_JUEGO.VELOCIDAD_MAX_HORMIGA)
-  const velMax = Math.min(velMin + 1.5, CONFIG_JUEGO.VELOCIDAD_MAX_HORMIGA)
+  const velMin = Math.min(2 + (nivel - 1) * 0.90, CONFIG_JUEGO.VELOCIDAD_MAX_HORMIGA)
+  const velMax = Math.min(velMin + 5.5, CONFIG_JUEGO.VELOCIDAD_MAX_HORMIGA)
   return velMin + progreso * (velMax - velMin)
 }
 
