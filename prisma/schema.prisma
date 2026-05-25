@@ -1,0 +1,20 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Puntuacion {
+  id         Int      @id @default(autoincrement())
+  nombre     String
+  puntos     Int
+  pantalla   Int
+  dificultad Int
+  creadoEn   DateTime @default(now())
+
+  @@index([puntos])
+}

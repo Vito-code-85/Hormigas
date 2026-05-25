@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #2d7a30;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ANIMACIÓN DE MARCHA DE LAS HORMIGAS
+   ══════════════════════════════════════════════════════════════════════════
+
+   Las hormigas usan el movimiento "trípode":
+     Grupo A → rota de -12° a +12° (patas avanzan)
+     Grupo B → rota de +12° a -12° (opuesto, sincronizado)
+
+   Con transform-box: fill-box y transform-origin: 50% 50%, la rotación
+   ocurre alrededor del centro del bounding box del grupo de patas, que
+   coincide con (0,0) = centro del tórax, porque el SVG está diseñado
+   simétricamente alrededor de ese punto.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes hormiga-patas-a {
+  0%, 100% { transform: rotate(-12deg); }
+  50%       { transform: rotate(12deg); }
+}
+
+@keyframes hormiga-patas-b {
+  0%, 100% { transform: rotate(12deg); }
+  50%       { transform: rotate(-12deg); }
+}
+
+/* Las antenas oscilan en sentido contrario una de la otra */
+@keyframes hormiga-antena {
+  0%, 100% { transform: rotate(-9deg); }
+  50%       { transform: rotate(9deg); }
+}
+
+/* Ligero balanceo del cuerpo al caminar */
+@keyframes hormiga-balanceo {
+  0%, 100% { transform: translateY(0px) scaleX(1); }
+  25%       { transform: translateY(-0.8px) scaleX(1.02); }
+  75%       { transform: translateY(-0.8px) scaleX(0.98); }
+}
+
+/* Patas grupo A: se aplica a <g class="hormiga-patas-a"> en HormigaSVG */
+.hormiga-patas-a {
+  transform-box: fill-box;       /* El origen se calcula sobre el bounding box del elemento */
+  transform-origin: 50% 50%;     /* Centro del bounding box = centro del tórax (0,0) */
+  animation: hormiga-patas-a 0.36s ease-in-out infinite;
+}
+
+/* Patas grupo B: movimiento opuesto al grupo A */
+.hormiga-patas-b {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: hormiga-patas-b 0.36s ease-in-out infinite;
+}
+
+/* Antena izquierda: rota desde su base (esquina inferior-derecha del bbox) */
+.hormiga-antena-izq {
+  transform-box: fill-box;
+  transform-origin: 100% 100%;   /* Base de la antena izquierda */
+  animation: hormiga-antena 0.54s ease-in-out infinite;
+}
+
+/* Antena derecha: movimiento inverso al de la izquierda */
+.hormiga-antena-der {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;    /* Base de la antena derecha */
+  animation: hormiga-antena 0.54s ease-in-out infinite reverse;
+}
+
+/* Balanceo del cuerpo: se aplica al div contenedor de cada hormiga */
+.hormiga-caminando {
+  animation: hormiga-balanceo 0.36s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FILTRO ROJO DE PELIGRO
+   ══════════════════════════════════════════════════════════════════════════
+   Se activa cuando alguna hormiga entra en el radio de una comida.
+   Pulsa rápido para llamar la atención sin bloquear la vista.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes peligro-pulso {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 1; }
+}
+
+.peligro-activo {
+  animation: peligro-pulso 0.35s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ANIMACIÓN DE HORMIGA APLASTADA
+   ══════════════════════════════════════════════════════════════════════════
+
+   Cuando el jugador mata una hormiga aparece su silueta aplastada durante 1s.
+   Fase 1 (0-45%): efecto "splat" → aparece con rebote de escala
+   Fase 2 (45-100%): desvanecimiento gradual hasta opacidad 0
+   forwards: mantiene opacity:0 hasta que React elimina el elemento del DOM
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes aplastada-splat {
+  0%   { transform: scale(0.15); opacity: 0;   }
+  20%  { transform: scale(1.35); opacity: 1;   }
+  40%  { transform: scale(0.92); opacity: 1;   }
+  55%  { transform: scale(1);    opacity: 0.95; }
+  100% { transform: scale(1);    opacity: 0;   }
+}
+
+.hormiga-aplastada-anim {
+  animation: aplastada-splat 1s ease-out forwards;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   ANIMACIÓN DE HORMIGA MORDIENDO
+   Se activa cuando una hormiga llega al alimento y no es la última vida.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes hormiga-muerde {
+  0%   { transform: scale(1)   rotate(-15deg) translateY(0);    }
+  25%  { transform: scale(1.6) rotate(20deg)  translateY(-24px); }
+  50%  { transform: scale(1.3) rotate(-8deg)  translateY(-12px); }
+  75%  { transform: scale(1.5) rotate(12deg)  translateY(-20px); }
+  100% { transform: scale(1)   rotate(-15deg) translateY(0);    }
+}
+
+.hormiga-muerde {
+  animation: hormiga-muerde 0.45s ease-in-out infinite;
+  display: inline-block;
+}
