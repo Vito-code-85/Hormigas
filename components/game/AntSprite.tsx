@@ -22,7 +22,7 @@ export default function AntSprite({ id, alMatar, refInterior }: PropiedadesHormi
         top: 0,
         // translate(-50%,-50%) centra el emoji en sus coordenadas x,y
         transform: 'translate(-50%, -50%)',
-        cursor: "url('/mano-png.svg') 16 44, pointer",
+        cursor: "url('/cursos-dedo.svg') 16 44, pointer",
         zIndex: 20,
         // Área de toque más grande para facilitar el click en móvil
         padding: '8px',
