@@ -4,7 +4,7 @@ const ARCHIVOS_CACHE = [
     "/",
     "/jugar",
     "/apple-touch-icon.png",
-    "/mano.png",
+    "/mano-png.svg",
     "/icon-192.png",
     "/icon-512.png",
     "/screenshot-escritorio.png",
